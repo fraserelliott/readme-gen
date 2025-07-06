@@ -20,14 +20,24 @@ class ReadmeGenerator:
         console = Console()
         for tag in self.merge_tags.values():
             tag.prompt(console)
+        self.replace_merge_tags()
+        self.save()
             
     def parse_template(self, template_path):
         with open(template_path) as file:
             self.text = file.read()
         
-        tags = re.findall(r"\{([^{}]+)\}", self.text) ##find anything between { and } except for { or } with at least 1 occurance to avoid empty tags or nested tags
+        tags = re.findall(r"\{([^{}]+)\}", self.text) ##find anything between { and } except for { or } with at least 1 occurance to avoid empty tags and to only grab inner tags if nested
         for tag in tags:
             self.add_merge_tag(MergeTag(tag))
+    
+    def replace_merge_tags(self):
+        for tag in self.merge_tags.values():
+            self.text = self.text.replace(f"{{{tag.tag_text}}}", tag.value)
+            
+    def save(self):
+        with open("generated-readme.md", "w") as file:
+            file.write(self.text)
                 
     def default(self): #test until I have the template reader made
         #Project title

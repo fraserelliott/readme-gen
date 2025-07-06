@@ -1,12 +1,23 @@
+from rich.console import Console
+from PyInquirer import prompt as inquirer_prompt
+
 #Default merge tag that requests a singular input based on the tag_text
 class MergeTag:
     def __init__(self, tag_text):
         self.tag_text = tag_text
         self.value = None
 
-    def prompt(self):
+    def prompt(self, console):
         #todo: get user input and store in self.value
-        pass
+        console.print(f"Please enter the value for [cyan]{self.tag_text}[/cyan]")
+        question = {
+            "type": "input",
+            "name": "text",
+            "message": "",
+            "validate": lambda val: val != "" or "Value cannot be empty"
+            }
+        response = inquirer_prompt(question)
+        self.value = response["text"]
 
 #Requests a singular input from a set of options
 class ListMergeTag(MergeTag):
@@ -14,7 +25,7 @@ class ListMergeTag(MergeTag):
         super().__init__(tag_text)
         self.options = options
 
-    def prompt(self):
+    def prompt(self, console):
         #todo: get user input to select an option from the set self.options and store it in self.value
         pass
 
@@ -25,6 +36,6 @@ class ListBuilderMergeTag(MergeTag):
         self.options = options
         self.delimiter = delimiter
 
-    def prompt(self):
+    def prompt(self, console):
         inputs = []
         #todo: get user input, then concatenate with delimiter and store in self.value

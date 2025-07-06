@@ -1,6 +1,7 @@
 import argparse
+from readme_generator import ReadmeGenerator
 
-#todo: create and instantiate my own objects for settings, template_gen and readme_gen
+#todo: create and instantiate my own objects for settings
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -16,4 +17,6 @@ elif args.template:
 elif args.regenerate:
     print("Not yet implemented.") #readme_gen.cli(path_to_template)
 else:
-    print("Not yet implemented.") #readme_gen.cli()
+    generator = ReadmeGenerator(None)
+    generator.default()
+    generator.cli("template.md")

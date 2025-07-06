@@ -43,6 +43,7 @@
 - Custom merge tag patterns
 - Config file support for defaults
 - Extend emoji and formatting options
+- Live preview for merge tag replacements in current section using Rich layout splitting
 
 ## Development Notes
 - Use Rich for CLI interface and colors
@@ -72,3 +73,4 @@
 - Takes a template path on .cli(template_path)
 - Validates a template is in the correct format
 - Handles regeneration from saved inputs
+- Holds a dictionary of sections and prompt instructions. Detects sections in templates by # tags and then looks for merge tags to replace.

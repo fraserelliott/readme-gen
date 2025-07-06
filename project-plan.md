@@ -34,6 +34,9 @@
 ### Preview
 - Convert Markdown to HTML
 - Open in system default browser for preview
+- Use markdown library (https://www.linode.com/docs/guides/how-to-use-python-markdown-to-convert-markdown-to-html/)
+- Extensions fenced_code and codehilite
+- Pygments to generate css
 
 ## Future Ideas
 - Advanced template generation wizard

@@ -18,5 +18,4 @@ elif args.regenerate:
     print("Not yet implemented.") #readme_gen.cli(path_to_template)
 else:
     generator = ReadmeGenerator(None)
-    generator.default()
-    generator.cli("template.md")
+    generator.cli("test-files/template.md")

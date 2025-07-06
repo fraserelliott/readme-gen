@@ -9,7 +9,7 @@ class MergeTag:
 
     def prompt(self, console):
         #todo: get user input and store in self.value
-        console.print(f"Please enter the value for [cyan]{self.tag_text}[/cyan]")
+        console.print(f"Please enter the value for [cyan]{{{self.tag_text}}}[/cyan]")
         question = {
             "type": "input",
             "name": "text",

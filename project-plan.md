@@ -12,15 +12,10 @@
 ### Input Handling
 - Prompt user for built-in options
 - Support custom templates with merge tags
-- Error handling:
-  - Missing merge tags
-  - Unclosed code blocks
 
 ### Template Management
 - `--template` command to generate new templates
 - `--settings` command to configure rules:
-  - Header merge tag requirements (#, ##, etc.)
-  - Code block merge tag requirements (languages)
   - Emoji mappings per section
   - Visual formatting options (horizontal lines)
 
@@ -71,6 +66,5 @@
 - class ReadmeGenerator
 - Handles input/output for generating a readme when called by main.py
 - Takes a template path on .cli(template_path)
-- Validates a template is in the correct format
+- Extracts merge tags from a template and holds in a dictionary
 - Handles regeneration from saved inputs
-- Holds a dictionary of sections and prompt instructions. Detects sections in templates by # tags and then looks for merge tags to replace.

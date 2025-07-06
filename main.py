@@ -3,9 +3,10 @@ import argparse
 #todo: create and instantiate my own objects for settings, template_gen and readme_gen
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--settings", action="store_true", help="Open settings configuration")
-parser.add_argument("--template", action="store_true", help="Open template wizard")
-parser.add_argument("--regenerate", action="store_true", help="Open regeneration wizard")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("--settings", action="store_true", help="Open settings configuration")
+group.add_argument("--template", action="store_true", help="Open template wizard")
+group.add_argument("--regenerate", action="store_true", help="Open regeneration wizard")
 args = parser.parse_args()
 
 if args.settings:

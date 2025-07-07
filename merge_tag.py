@@ -12,6 +12,9 @@ class MergeTag:
 
     def changed(self):
         return self.tag_text != self.value
+    
+    def equals(self, other):
+        return self.tag_text == other.tag_text
 
     def prompt(self, console):
         #todo: get user input and store in self.value

@@ -5,7 +5,13 @@ from PyInquirer import prompt as inquirer_prompt
 class MergeTag:
     def __init__(self, tag_text):
         self.tag_text = tag_text
-        self.value = None
+        self.value = tag_text
+
+    def update_value(self, value):
+        self.value = value
+
+    def changed(self):
+        return self.tag_text != self.value
 
     def prompt(self, console):
         #todo: get user input and store in self.value

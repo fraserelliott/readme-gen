@@ -1,4 +1,5 @@
 from merge_tag import MergeTag
+from merge_tag_inputs import MergeTagInput
 import re
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
@@ -41,16 +42,12 @@ class ReadmeGenerator(App):
                 yield Static("Merge tags:")
                 for tag_name, _ in self.merge_tags.items():
                     yield Static(tag_name)
-                    yield Input(id=tag_name)
+                    yield MergeTagInput(id=tag_name)
             
             yield Static(self.text, id="preview", classes="box")
 
-    @on(Input.Changed)
-    def on_input_changed(self, event: Input.Changed) -> None:
-        assert event.input.id is not None
-        tag_text = event.input.id
-        current_value = event.input.value
-        self.merge_tags[tag_text].update_value(current_value)
+    def update_merge_tag(self, tag_text, value):
+        self.merge_tags[tag_text].value = value
         self.update_preview(tag_text)
 
     def update_preview(self, current_tag=None):
@@ -65,7 +62,10 @@ class ReadmeGenerator(App):
         for tag in self.merge_tags.values():
             replacing_text = tag.value
             if current_tag is not None and tag.tag_text == current_tag:
-                replacing_text = addColor(replacing_text, "cyan") #todo: settings
+                if tag.changed():
+                    replacing_text = addColor(replacing_text, "cyan") #todo: settings
+                else:
+                    replacing_text = addColor(f"{{{tag.tag_text}}}", "cyan") #todo: settings
             elif tag.changed():
                 replacing_text = addColor(replacing_text, "green") #todo: settings
             else:

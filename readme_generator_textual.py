@@ -4,8 +4,6 @@ import re
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.widgets import Static, Input
-from textual import on
-from textual.events import Focus, Blur
 
 #usage: addColor("foo", red) => "[red]foo[/red]"
 def addColor(str, color):

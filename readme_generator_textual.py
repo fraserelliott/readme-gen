@@ -45,12 +45,13 @@ class ReadmeGenerator(App):
             
             yield Static(self.text, id="preview", classes="box")
 
-    @on(Blur)
-    def on_input_focus(self, event: Blur) -> None:
-        with open("debug.txt", "a", encoding="utf-8") as f:
-            f.write(f"[BLUR] {event.sender}\n")
-        if isinstance(event.sender, Input):
-            self.update_preview()
+    @on(Input.Changed)
+    def on_input_changed(self, event: Input.Changed) -> None:
+        assert event.input.id is not None
+        tag_text = event.input.id
+        current_value = event.input.value
+        self.merge_tags[tag_text].update_value(current_value)
+        self.update_preview(tag_text)
 
     def update_preview(self, current_tag=None):
         preview = self.query_one("#preview", Static)

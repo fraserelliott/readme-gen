@@ -5,7 +5,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.widgets import Static, Input
 
-#usage: addColor("foo", red) => "[red]foo[/red]"
+#usage: addColor("foo", "red") => "[red]foo[/red]"
 def addColor(str, color):
     return f"[{color}]{str}[/{color}]"
 

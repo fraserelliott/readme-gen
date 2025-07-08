@@ -14,7 +14,7 @@ class MergeTagInput(Input):
         self.app.update_merge_tag(self.id, value)
 
 class MergeTagSelect(Select):
-    def __init__(self, id, config = []):
+    def __init__(self, id, config = None):
         super().__init__(id=id)
         self.options = config.options
 

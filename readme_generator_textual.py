@@ -2,6 +2,7 @@ from merge_tag_inputs import MergeTagInput
 import re
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
+from textual.binding import Binding
 from textual.widgets import Static, Input
 
 #usage: addColor("foo", "red") => "[red]foo[/red]"
@@ -10,6 +11,10 @@ def addColor(str, color):
 
 class ReadmeGenerator(App):
     CSS_PATH = "horizontal_layout.tcss"
+
+    BINDINGS = [
+        Binding("ctrl+s", "save", "Save", show=True) #todo: toast message
+    ]
 
     def __init__(self, settings):
         super().__init__()
@@ -49,29 +54,32 @@ class ReadmeGenerator(App):
 
     def update_preview(self, current_tag=None):
         preview = self.query_one("#preview", Static)
-        preview_text = self.replace_merge_tags(current_tag)
+        preview_text = self.replace_merge_tags(current_tag, True)
         preview.update(preview_text)
     
     #current_tag is the currently focused tag name that we want to highlight
-    def replace_merge_tags(self, current_tag=None): #todo: parameter for colours
+    def replace_merge_tags(self, current_tag=None, recolor=False): #todo: parameter for colours
         replaced_text = self.text
 
         for tag_name in self.merge_tags:
             tag_value = self.merge_tags[tag_name]
             replacing_text = tag_value #This will be the value we replace {tag_name} with + any colours added
-            if current_tag is not None and tag_name == current_tag:
-                if tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
-                    replacing_text = addColor(replacing_text, "cyan") #todo: settings
+
+            if recolor:
+                if current_tag is not None and tag_name == current_tag:
+                    if tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
+                        replacing_text = addColor(replacing_text, "cyan") #todo: settings
+                    else:
+                        replacing_text = addColor(f"{{{replacing_text}}}", "cyan") #todo: settings
+                elif tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
+                    replacing_text = addColor(replacing_text, "green") #todo: settings
                 else:
-                    replacing_text = addColor(f"{{{replacing_text}}}", "cyan") #todo: settings
-            elif tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
-                replacing_text = addColor(replacing_text, "green") #todo: settings
-            else:
-                replacing_text = addColor(f"{{{tag_value}}}", "red") #todo: settings
+                    replacing_text = addColor(f"{{{tag_value}}}", "red") #todo: settings
+            
             replaced_text = replaced_text.replace(f"{{{tag_name}}}", replacing_text) #Replace all merge tags with the replacing_text
         return replaced_text
-            
-    def save(self):
+
+    def action_save(self):
         self.text = self.replace_merge_tags()
         with open("generated-readme.md", "w") as file:
             file.write(self.text)

@@ -24,4 +24,7 @@ class MergeTagSelect(Select):
         self.app.update_preview()
 
     def watch_value(self, value) -> None:
-        self.app.update_merge_tag(self.id, value)
+        if value == Select.BLANK:
+            self.app.update_merge_tag(self.id, self.id)
+        else:
+            self.app.update_merge_tag(self.id, value)

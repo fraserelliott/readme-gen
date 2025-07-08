@@ -1,4 +1,3 @@
-from merge_tag import MergeTag
 from merge_tag_inputs import MergeTagInput
 import re
 from textual.app import App, ComposeResult
@@ -18,9 +17,9 @@ class ReadmeGenerator(App):
         self.text = ""
         self.merge_tags = dict()
         
-    def add_merge_tag(self, merge_tag):
-        if merge_tag.tag_text not in self.merge_tags:
-            self.merge_tags[merge_tag.tag_text] = merge_tag
+    def add_merge_tag(self, tag_name):
+        if tag_name not in self.merge_tags:
+            self.merge_tags[tag_name] = tag_name
     
     def cli(self, template_path): #Entry point from main.py
         self.parse_template(template_path)
@@ -32,7 +31,7 @@ class ReadmeGenerator(App):
         
         tags = re.findall(r"\{([^{}]+)\}", self.text) ##find anything between { and } except for { or } with at least 1 occurance to avoid empty tags and to only grab inner tags if nested
         for tag in tags:
-            self.add_merge_tag(MergeTag(tag))
+            self.add_merge_tag(tag)
 
     def compose(self) -> ComposeResult:
         with Horizontal():
@@ -44,9 +43,9 @@ class ReadmeGenerator(App):
             
             yield Static(self.text, id="preview", classes="box")
 
-    def update_merge_tag(self, tag_text, value):
-        self.merge_tags[tag_text].value = value
-        self.update_preview(tag_text)
+    def update_merge_tag(self, tag_name, value):
+        self.merge_tags[tag_name] = value
+        self.update_preview(tag_name)
 
     def update_preview(self, current_tag=None):
         preview = self.query_one("#preview", Static)
@@ -54,21 +53,22 @@ class ReadmeGenerator(App):
         preview.update(preview_text)
     
     #current_tag is the currently focused tag name that we want to highlight
-    def replace_merge_tags(self, current_tag=None):
+    def replace_merge_tags(self, current_tag=None): #todo: parameter for colours
         replaced_text = self.text
 
-        for tag in self.merge_tags.values():
-            replacing_text = tag.value
-            if current_tag is not None and tag.tag_text == current_tag:
-                if tag.changed():
+        for tag_name in self.merge_tags:
+            tag_value = self.merge_tags[tag_name]
+            replacing_text = tag_value #This will be the value we replace {tag_name} with + any colours added
+            if current_tag is not None and tag_name == current_tag:
+                if tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
                     replacing_text = addColor(replacing_text, "cyan") #todo: settings
                 else:
-                    replacing_text = addColor(f"{{{tag.tag_text}}}", "cyan") #todo: settings
-            elif tag.changed():
+                    replacing_text = addColor(f"{{{replacing_text}}}", "cyan") #todo: settings
+            elif tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
                 replacing_text = addColor(replacing_text, "green") #todo: settings
             else:
-                replacing_text = addColor(f"{{{tag.tag_text}}}", "red") #todo: settings
-            replaced_text = replaced_text.replace(f"{{{tag.tag_text}}}", replacing_text)
+                replacing_text = addColor(f"{{{tag_value}}}", "red") #todo: settings
+            replaced_text = replaced_text.replace(f"{{{tag_name}}}", replacing_text) #Replace all merge tags with the replacing_text
         return replaced_text
             
     def save(self):
@@ -79,4 +79,4 @@ class ReadmeGenerator(App):
     def default(self): #test until I have the template reader made
         #Project title
         self.text = "# {project_title}"
-        self.add_merge_tag(MergeTag("project_title"))
+        self.add_merge_tag("project_title")

@@ -44,7 +44,8 @@ class ReadmeGenerator(App):
                 yield Static("Merge tags:")
                 for tag_name, _ in self.merge_tags.items():
                     yield Static(tag_name)
-                    yield MergeTagInput(id=tag_name)
+                    # yield MergeTagInput(id=tag_name)
+                    yield self.settings.create_input(tag_name)
             
             yield Static(self.text, id="preview", classes="box")
 

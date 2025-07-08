@@ -15,8 +15,7 @@ class MergeTagInput(Input):
 
 class MergeTagSelect(Select):
     def __init__(self, id, config = None):
-        super().__init__(id=id)
-        self.options = config.options
+        super().__init__(id=id, options=[(item, item) for item in config["options"]])
 
     def on_focus(self) -> None:
         self.app.update_preview(self.id)

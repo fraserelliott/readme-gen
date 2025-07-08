@@ -3,7 +3,7 @@ import re
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.binding import Binding
-from textual.widgets import Static, Input
+from textual.widgets import Static
 
 #usage: addColor("foo", "red") => "[red]foo[/red]"
 def addColor(str, color):

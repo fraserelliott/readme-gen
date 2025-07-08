@@ -1,7 +1,9 @@
 import argparse
 from readme_generator_textual import ReadmeGenerator
+from settings import Settings
 
-#todo: create and instantiate my own objects for settings
+settings = Settings()
+settings.load("test-files/settings.json")
 
 # Arg parsing and routing with options for -h or --help
 parser = argparse.ArgumentParser()
@@ -18,5 +20,5 @@ elif args.template:
 elif args.regenerate:
     print("Not yet implemented.") #readme_gen.regenerate()
 else:
-    generator = ReadmeGenerator(None)
+    generator = ReadmeGenerator(settings)
     generator.cli("test-files/template.md")

@@ -1,4 +1,5 @@
 from merge_tag_inputs import MergeTagInput, MergeTagSelect
+import json
 
 INPUT_TYPE_REGISTRY = {
     "MergeTagInput": MergeTagInput,
@@ -8,6 +9,20 @@ INPUT_TYPE_REGISTRY = {
 class Settings:
     def __init__(self):
         self.tag_dict = dict()
+
+    def load(self, file_path):
+        try:
+            with open(file_path, "r") as file:
+                data = json.load(file)
+                for tag in data:
+                    tag_name = tag["tag_name"]
+                    config = tag["config"]
+                    self.add_tag(tag_name, config)
+            return True
+        except Exception as e:
+            print("An error occured: ", e)
+            return False
+            
 
     def add_tag(self, tag_name, config):
         self.tag_dict[tag_name] = config

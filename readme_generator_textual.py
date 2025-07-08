@@ -41,11 +41,12 @@ class ReadmeGenerator(App):
     def compose(self) -> ComposeResult:
         with Horizontal():
             with Vertical(classes="box"): #box makes them take equal widths
-                yield Static("Merge tags:")
+                yield Static("Merge tags:\n")
                 for tag_name, _ in self.merge_tags.items():
                     yield Static(tag_name)
                     # yield MergeTagInput(id=tag_name)
                     yield self.settings.create_input(tag_name)
+                    yield Static("")
             
             yield Static(self.text, id="preview", classes="box")
 

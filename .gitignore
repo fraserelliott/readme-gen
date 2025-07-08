@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 *.sh
 test-files/
+generated-readme.md

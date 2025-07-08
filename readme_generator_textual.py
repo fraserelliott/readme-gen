@@ -75,8 +75,3 @@ class ReadmeGenerator(App):
         self.text = self.replace_merge_tags()
         with open("generated-readme.md", "w") as file:
             file.write(self.text)
-                
-    def default(self): #test until I have the template reader made
-        #Project title
-        self.text = "# {project_title}"
-        self.add_merge_tag("project_title")

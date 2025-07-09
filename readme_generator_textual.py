@@ -51,9 +51,8 @@ class ReadmeGenerator(App):
                 
                 yield Static(self.text, id="preview", classes="box")
         
-            self.popup = Static("Saved generated-readme.md", id="popup")
-            self.popup.display = False
-            yield self.popup
+            self.statusbar = Static("Ctrl+Q to quit | Ctrl+S to save", id="statusbar")
+            yield self.statusbar
 
     def update_merge_tag(self, tag_name, value):
         self.merge_tags[tag_name] = value
@@ -90,5 +89,7 @@ class ReadmeGenerator(App):
         self.text = self.replace_merge_tags()
         with open("generated-readme.md", "w") as file:
             file.write(self.text)
-        self.popup.display = True
-        self.set_timer(2, lambda: setattr(self.popup, "display", False))
+        
+        default_message = "Ctrl+Q to quit | Ctrl+S to save"
+        self.statusbar.update("Saved generated-readme.md!")
+        self.set_timer(2, lambda: self.statusbar.update(default_message))

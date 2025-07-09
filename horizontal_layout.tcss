@@ -8,7 +8,7 @@ Screen {
     border: solid green;
 }
 
-#popup {
+#statusbar {
     position: absolute;
     height: 3;
     align-vertical: bottom;

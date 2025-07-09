@@ -13,7 +13,7 @@ class ReadmeGenerator(App):
     CSS_PATH = "horizontal_layout.tcss"
 
     BINDINGS = [
-        Binding("ctrl+s", "save", "Save", show=True) #todo: toast message
+        Binding("ctrl+s", "save", "Save", show=True)
     ]
 
     def __init__(self, settings):
@@ -39,16 +39,21 @@ class ReadmeGenerator(App):
             self.add_merge_tag(tag)
 
     def compose(self) -> ComposeResult:
-        with Horizontal():
-            with Vertical(classes="box"): #box makes them take equal widths
-                yield Static("Merge tags:\n")
-                for tag_name, _ in self.merge_tags.items():
-                    yield Static(tag_name)
-                    # yield MergeTagInput(id=tag_name)
-                    yield self.settings.create_input(tag_name)
-                    yield Static("")
-            
-            yield Static(self.text, id="preview", classes="box")
+        with Vertical():
+            with Horizontal():
+                with Vertical(classes="box"): #box makes them take equal widths
+                    yield Static("Merge tags:\n")
+                    for tag_name, _ in self.merge_tags.items():
+                        yield Static(tag_name)
+                        # yield MergeTagInput(id=tag_name)
+                        yield self.settings.create_input(tag_name)
+                        yield Static("")
+                
+                yield Static(self.text, id="preview", classes="box")
+        
+            self.popup = Static("Saved generated-readme.md", id="popup")
+            self.popup.display = False
+            yield self.popup
 
     def update_merge_tag(self, tag_name, value):
         self.merge_tags[tag_name] = value
@@ -85,3 +90,5 @@ class ReadmeGenerator(App):
         self.text = self.replace_merge_tags()
         with open("generated-readme.md", "w") as file:
             file.write(self.text)
+        self.popup.display = True
+        self.set_timer(2, lambda: setattr(self.popup, "display", False))

@@ -7,3 +7,11 @@ Screen {
     width: 1fr;
     border: solid green;
 }
+
+#popup {
+    position: absolute;
+    height: 3;
+    align-vertical: bottom;
+    border: solid green;
+    dock: bottom;
+}

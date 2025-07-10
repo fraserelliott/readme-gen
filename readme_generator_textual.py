@@ -16,7 +16,7 @@ class ReadmeGenerator(App):
         Binding("ctrl+s", "save", "Save", show=True)
     ]
 
-    def __init__(self, settings):
+    def __init__(self, settings=None):
         super().__init__()
         self.settings = settings
         self.text = ""
@@ -26,17 +26,23 @@ class ReadmeGenerator(App):
         if tag_name not in self.merge_tags:
             self.merge_tags[tag_name] = tag_name
     
-    def cli(self, template_path): #Entry point from main.py
-        self.parse_template(template_path)
+    def cli(self, template_path=None): #Entry point from main.py
+        if template_path:
+            self.parse_template(template_path)
         self.run()
 
     def parse_template(self, template_path):
-        with open(template_path) as file:
+        with open(template_path, encoding="utf-8") as file:
             self.text = file.read()
         
-        tags = re.findall(r"\{([^{}]+)\}", self.text) ##find anything between { and } except for { or } with at least 1 occurance to avoid empty tags and to only grab inner tags if nested
+        tags = re.findall(r"\{([^{}]+)\}", self.text) # find anything between { and } except for { or } with at least 1 occurance to avoid empty tags and to only grab inner tags if nested
+        if not tags:
+            return False
+
         for tag in tags:
             self.add_merge_tag(tag)
+        
+        return True
 
     def compose(self) -> ComposeResult:
         with Vertical():
@@ -45,7 +51,6 @@ class ReadmeGenerator(App):
                     yield Static("Merge tags:\n")
                     for tag_name, _ in self.merge_tags.items():
                         yield Static(tag_name)
-                        # yield MergeTagInput(id=tag_name)
                         yield self.settings.create_input(tag_name)
                         yield Static("")
                 

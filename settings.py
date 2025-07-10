@@ -21,6 +21,7 @@ class Settings:
             return True
         except Exception as e:
             print("An error occured: ", e)
+            self.tag_dict = dict() #return it to an empty dict as loading failed
             return False
             
 

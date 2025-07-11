@@ -100,4 +100,4 @@ class ReadmeGenerator(App):
         self.set_timer(2, lambda: self.statusbar.update(self.DEFAULT_MESSAGE))
 
     def action_terminate(self):
-        sys.exit(0)
+        self.main_menu.quit()

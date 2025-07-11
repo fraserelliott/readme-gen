@@ -1,5 +1,6 @@
 from merge_tag_inputs import MergeTagInput
 import re
+import sys
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal, Container
 from textual.binding import Binding
@@ -13,23 +14,22 @@ class ReadmeGenerator(App):
     CSS_PATH = "layout.tcss"
 
     BINDINGS = [
-        Binding("ctrl+s", "save", "Save", show=True)
+        Binding("ctrl+s", "save", "Save", show=True, priority=True),
+        Binding("ctrl+x", "terminate", "terminate", show=True, priority=True)
     ]
 
-    def __init__(self, settings=None):
+    DEFAULT_MESSAGE = "Ctrl+X to quit | Ctrl+S to save | Ctrl+Q to return to main menu"
+
+    def __init__(self, main_menu, settings=None):
         super().__init__()
         self.settings = settings
+        self.main_menu = main_menu
         self.text = ""
         self.merge_tags = dict()
         
     def add_merge_tag(self, tag_name):
         if tag_name not in self.merge_tags:
             self.merge_tags[tag_name] = tag_name
-    
-    def cli(self, template_path=None): #Entry point from main.py
-        if template_path:
-            self.parse_template(template_path)
-        self.run()
 
     def parse_template(self, template_path):
         with open(template_path, encoding="utf-8") as file:
@@ -52,12 +52,12 @@ class ReadmeGenerator(App):
                     for tag_name, _ in self.merge_tags.items():
                         yield Static(tag_name)
                         yield self.settings.create_input(tag_name)
-                        yield Static("")
+                        yield Static()
                 
                 with Container(classes="box"):
                     yield Static(self.text, id="preview")
         
-            self.statusbar = Static("Ctrl+Q to quit | Ctrl+S to save", id="statusbar")
+            self.statusbar = Static(self.DEFAULT_MESSAGE, id="statusbar")
             yield self.statusbar
 
     def update_merge_tag(self, tag_name, value):
@@ -70,7 +70,7 @@ class ReadmeGenerator(App):
         preview.update(preview_text)
     
     #current_tag is the currently focused tag name that we want to highlight
-    def replace_merge_tags(self, current_tag=None, recolor=False): #todo: parameter for colours
+    def replace_merge_tags(self, current_tag=None, recolor=False):
         replaced_text = self.text
 
         for tag_name in self.merge_tags:
@@ -80,13 +80,13 @@ class ReadmeGenerator(App):
             if recolor:
                 if current_tag is not None and tag_name == current_tag:
                     if tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
-                        replacing_text = addColor(replacing_text, "cyan") #todo: settings
+                        replacing_text = addColor(replacing_text, "cyan")
                     else:
-                        replacing_text = addColor(f"{{{replacing_text}}}", "cyan") #todo: settings
+                        replacing_text = addColor(f"{{{replacing_text}}}", "cyan") # wrap in { } as the text hasn't changed yet so merge_tag should be {merge_tag} in the preview
                 elif tag_value != tag_name: #check if it's changed as it starts as tag_name: tag_name
-                    replacing_text = addColor(replacing_text, "green") #todo: settings
+                    replacing_text = addColor(replacing_text, "green")
                 else:
-                    replacing_text = addColor(f"{{{tag_value}}}", "red") #todo: settings
+                    replacing_text = addColor(f"{{{tag_value}}}", "red")
             
             replaced_text = replaced_text.replace(f"{{{tag_name}}}", replacing_text) #Replace all merge tags with the replacing_text
         return replaced_text
@@ -96,6 +96,8 @@ class ReadmeGenerator(App):
         with open("generated-readme.md", "w") as file:
             file.write(self.text)
         
-        default_message = "Ctrl+Q to quit | Ctrl+S to save"
         self.statusbar.update("Saved generated-readme.md!")
-        self.set_timer(2, lambda: self.statusbar.update(default_message))
+        self.set_timer(2, lambda: self.statusbar.update(self.DEFAULT_MESSAGE))
+
+    def action_terminate(self):
+        sys.exit(0)

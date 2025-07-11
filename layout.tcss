@@ -1,11 +1,9 @@
-Screen {
-    layout: horizontal;
-}
-
 .box {
     height: 100%;
     width: 1fr;
     border: solid green;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 #statusbar {

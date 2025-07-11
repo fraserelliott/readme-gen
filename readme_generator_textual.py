@@ -1,7 +1,7 @@
 from merge_tag_inputs import MergeTagInput
 import re
 from textual.app import App, ComposeResult
-from textual.containers import Vertical, Horizontal
+from textual.containers import Vertical, Horizontal, Container
 from textual.binding import Binding
 from textual.widgets import Static
 
@@ -10,7 +10,7 @@ def addColor(str, color):
     return f"[{color}]{str}[/{color}]"
 
 class ReadmeGenerator(App):
-    CSS_PATH = "horizontal_layout.tcss"
+    CSS_PATH = "layout.tcss"
 
     BINDINGS = [
         Binding("ctrl+s", "save", "Save", show=True)
@@ -54,7 +54,8 @@ class ReadmeGenerator(App):
                         yield self.settings.create_input(tag_name)
                         yield Static("")
                 
-                yield Static(self.text, id="preview", classes="box")
+                with Container(classes="box"):
+                    yield Static(self.text, id="preview")
         
             self.statusbar = Static("Ctrl+Q to quit | Ctrl+S to save", id="statusbar")
             yield self.statusbar

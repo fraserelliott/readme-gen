@@ -2,8 +2,27 @@ import argparse
 import os
 from readme_generator_textual import ReadmeGenerator
 from settings import Settings
+from PyInquirer import prompt
 
 SETTINGS_PATH = "test-files/settings.json"
+ROUTING_CHOICES = {
+    "template_wizard": {
+        "name": "Run template wizard",
+        "value": "template_wizard"
+    },
+    "template_select": {
+        "name": "Select template location to generate README",
+        "value": "template_select"
+    },
+    "settings_wizard": {
+        "name": "Run settings wizard",
+        "value": "settings_wizard"
+    },
+    "quit": {
+        "name": "Quit",
+        "value": "quit"
+    }
+}
 
 class MainMenu:
     def __init__(self):
@@ -38,7 +57,8 @@ class MainMenu:
         generator = ReadmeGenerator()
 
         if not os.path.exists(self.template_path):
-            # Template doesn't exist so give some options
+            # Template doesn't exist so give some options.
+            # todo: make these values in a const
             data["message"] = "Template {self.template_path} not found."
             data["choices"] = ["Run template wizard", "Give another template location", "Quit"]
             return data
@@ -64,6 +84,17 @@ class MainMenu:
         generator.settings = self.settings
         generator.cli()
         
+
+    def select_menu(self, message:str, choices:tuple):
+        menu_choices = [ROUTING_CHOICES[key] for key in choices]
+        question = {
+            "type": "list",
+            "name":"action",
+            "message": message,
+            "choices": menu_choices
+        }
+        answers = prompt([question])
+        getattr(self, answers["action"])()
 
 if __name__ == "__main__":
     menu = MainMenu()

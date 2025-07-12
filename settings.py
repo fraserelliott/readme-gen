@@ -1,10 +1,16 @@
 from merge_tag_inputs import MergeTagInput, MergeTagSelect
+from PyInquirer import prompt
+import prompt_utils
+from string_utils import spaced_to_snake
+from rich.console import Console
 import json
 
 INPUT_TYPE_REGISTRY = {
     "MergeTagInput": MergeTagInput,
     "MergeTagSelect": MergeTagSelect
 }
+
+Y_N_VALIDATOR = "y_n"
 
 class Settings:
     def __init__(self):
@@ -46,3 +52,42 @@ class Settings:
 class SettingsWizard:
     def __init__(self, main_menu):
         self.main_menu = main_menu
+    
+    def run(self):
+        tags = []
+
+        while True:
+            question = prompt_utils.build_input("add_tag", "Configure new tag to be a list with set options?", Y_N_VALIDATOR)
+            if not prompt([question])["add_tag"]:
+                break
+
+            # Build initial tag object
+            question = prompt_utils.build_input("tag_name", "Tag name: ")
+            tag = { "tag_name": prompt([question])["tag_name"]  }
+            tag["config"] = { "input_type": "MergeTagSelect", "options": []}
+
+            # Add options to tag object
+            while True:
+                question = prompt_utils.build_input("add_option", f"Add new option to list for {tag['tag_name']}?", Y_N_VALIDATOR)
+                if not prompt([question])["add_option"]:
+                    break
+
+                question = prompt_utils.build_input("tag_option", "Enter option: ")
+                tag["config"]["options"].append(prompt([question])["tag_option"])
+            
+            tags.append(tag)
+
+        if not tags:
+            console = Console()
+            console.print("[red]No tags were configured.[/red]")
+            question = prompt_utils.build_input("save_blank", "Do you want to save a blank settings file?", Y_N_VALIDATOR)
+
+            if not prompt([question])["save_blank"]:
+                return
+        
+        # Save settings to default path
+        with open(self.main_menu.SETTINGS_PATH, "w") as file:
+            json.dump(tags, file, indent=2)
+
+        # Load settings straight away
+        self.main_menu.settings.load(self.main_menu.SETTINGS_PATH)

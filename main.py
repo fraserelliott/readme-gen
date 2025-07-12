@@ -4,6 +4,7 @@ from readme_generator import ReadmeGenerator
 from template_wizard import TemplateWizard
 from settings import Settings, SettingsWizard
 from PyInquirer import prompt
+import prompt_utils
 
 ROUTING_CHOICES = {
     "template_wizard": {
@@ -91,12 +92,7 @@ class MainMenu:
             self.select_menu(res["message"], res["choices"])
 
     def template_select(self):
-        question = {
-            "type": "input",
-            "name": "template_path",
-            "message": "Enter the template file path: ",
-            "validate": lambda val: bool(val.strip()) or "Template path cannot be empty."
-            }
+        question = prompt_utils.build_input("template_path", "Enter the template file path: ")
         answers = prompt([question])
         self.template_path = answers["template_path"]
         res = self.init_readme_generator()

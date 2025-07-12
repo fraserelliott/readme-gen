@@ -1,4 +1,3 @@
 rich
 PyInquirer
-markdown
 textual

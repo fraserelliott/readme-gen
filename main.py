@@ -31,11 +31,11 @@ ROUTING_CHOICES = {
 }
 
 class MainMenu:
-    SETTINGS_PATH = "test-files/settings.json"
+    SETTINGS_PATH = "settings.json"
 
     def __init__(self):
         self.settings = Settings()
-        self.template_path = "test-files/template.md"
+        self.template_path = "template.md"
     
     def run(self):
         menu_choices = ("settings_wizard", "template_wizard", "init_readme_generator", "template_select", "quit")

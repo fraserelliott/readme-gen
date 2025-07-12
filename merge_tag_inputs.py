@@ -15,7 +15,7 @@ class MergeTagInput(Input):
 
 class MergeTagSelect(Select):
     def __init__(self, id, config = None):
-        super().__init__(id=id, options=[(item, item) for item in config["options"]])
+        super().__init__(id=id, options=[(item, item) for item in config["options"]]) # Textual expects options in (text, value) pairs, this uses the same value as the text displayed
 
     def on_focus(self) -> None:
         self.app.update_preview(self.id)

@@ -13,11 +13,13 @@ def addColor(str, color):
 class ReadmeGenerator(App):
     CSS_PATH = "layout.tcss"
 
+    # these trigger action_save and action_terminate with the key bindings given
     BINDINGS = [
         Binding("ctrl+s", "save", "Save", show=True, priority=True),
         Binding("ctrl+x", "terminate", "terminate", show=True, priority=True)
     ]
 
+    # ctrl+q is built in, this closes the ReadmeGenerator which means it returns to the main menu where ReadmeGenerator.run was called.
     DEFAULT_MESSAGE = "Ctrl+X to quit | Ctrl+S to save | Ctrl+Q to return to main menu"
 
     def __init__(self, main_menu, settings=None):
@@ -44,6 +46,7 @@ class ReadmeGenerator(App):
         
         return True
 
+    # App.compose is used by Textual to build the layout once App.run is called. It needs to yield items to a ComposeResult which Textual uses as a generator. This is similar to using flexbox in css where you can make Vertical and Horizontal containers. Static is a piece of text.
     def compose(self) -> ComposeResult:
         with Vertical():
             with Horizontal():
@@ -51,7 +54,7 @@ class ReadmeGenerator(App):
                     yield Static("Merge tags:\n")
                     for tag_name, _ in self.merge_tags.items():
                         yield Static(tag_name)
-                        yield self.settings.create_input(tag_name)
+                        yield self.settings.create_input(tag_name) # retrieve correct input type from the settings
                         yield Static()
                 
                 with Container(classes="box"):
@@ -60,6 +63,7 @@ class ReadmeGenerator(App):
             self.statusbar = Static(self.DEFAULT_MESSAGE, id="statusbar")
             yield self.statusbar
 
+    # called by events in merge_tag_inputs when a merge tag value changes
     def update_merge_tag(self, tag_name, value):
         self.merge_tags[tag_name] = value
         self.update_preview(tag_name)

@@ -6,6 +6,7 @@ from settings import Settings, SettingsWizard
 from PyInquirer import prompt
 import prompt_utils
 
+# These are used in MainMenu.select_menu to build menus where the name is the text shown and the value is the function it'll run
 ROUTING_CHOICES = {
     "template_wizard": {
         "name": "Run template wizard",

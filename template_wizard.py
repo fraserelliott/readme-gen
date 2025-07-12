@@ -54,6 +54,7 @@ class TemplateWizard:
             # anything created with a list is filtered with spaced_to_snake already so header_level, type and language don't need to be changed
             merge_tag = f"{{{spaced_to_snake(section_title)}}}"
 
+            # build sections out depending on type
             if section["type"] == "header":
                 text += f"{header_prefix} {merge_tag}\n"
             elif section["type"] == "merge_tag":

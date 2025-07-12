@@ -40,11 +40,5 @@ MIT
 Fraser Elliott
 
 ---
-## Example Code
-```python
-def main():
-```
-
----
 ## Contact Information
 http://fraserdev.uk/

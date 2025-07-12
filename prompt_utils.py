@@ -1,22 +1,11 @@
 from collections.abc import Sequence
 from typing import Callable, Optional, Tuple, List, Dict, Any
 from functools import reduce
+from string_utils import snake_to_proper
 
 ValidatorFunc = Callable[[str], bool | str]
 FilterFunc = Callable[[str], Any]
 PromptValidator = Tuple[Optional[FilterFunc], ValidatorFunc]
-
-def snake_to_proper(s: str) -> str:
-    """
-    Transforms snake_case to Snake Case for use in user outputs
-
-    Args:
-        s (str): The snake_case string to transform
-    
-    Returns:
-        str: s transformed to Proper Noun with capitalised first letters and _ changed to a space
-    """
-    return " ".join(word.capitalize() for word in s.split("_"))
 
 def non_empty_validator(name: str) -> PromptValidator:
     """

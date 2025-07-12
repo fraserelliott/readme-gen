@@ -28,13 +28,15 @@ class TemplateWizard:
             if prompt([question])["add_section"]:
                 question1 = prompt_utils.build_input("name", "Section name: ")
                 question2 = prompt_utils.build_list("header_level", "Header level: ", ["1", "2", "3"])
-                question3 = prompt_utils.build_list("type", "Section type: ", ["Header", "Text", "Code"])
+                question3 = prompt_utils.build_list("type", "Section type: ", ["Header", "Merge Tag", "Custom Text", "Code"])
                 section = prompt([question1, question2, question3])
 
                 if section["type"] == "code":
                     question = prompt_utils.build_list("language", "Code language: ", GITHUB_CODE_LANGUAGES)
                     section["language"] = prompt([question])["language"]
-                
+                elif section["type"] == "custom_text":
+                    question = prompt_utils.build_input("custom_text", "Enter the text for this section, include any {{merge_tags}} you'd like: ")
+                    section["text"] = prompt([question])["custom_text"]
                 sections.append(section)
             else:
                 break
@@ -54,9 +56,12 @@ class TemplateWizard:
 
             if section["type"] == "header":
                 text += f"{header_prefix} {merge_tag}\n"
-            elif section["type"] == "text":
+            elif section["type"] == "merge_tag":
                 text += f"{header_prefix} {section_title}\n"
                 text += f"{merge_tag}\n"
+            elif section["type"] == "custom_text":
+                text += f"{header_prefix} {section_title}\n"
+                text += f"{section['text']}\n"
             elif section["type"] == "code":
                 text += f"{header_prefix} {section_title}\n"
                 text += f"```{section['language']}\n"

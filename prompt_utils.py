@@ -1,9 +1,9 @@
 from collections.abc import Sequence
-from typing import Callable, Optional, Tuple, List, Dict, Any
+from typing import Callable, Optional, Tuple, List, Dict, Any, Union
 from functools import reduce
-from string_utils import snake_to_proper
+from string_utils import snake_to_proper, spaced_to_snake
 
-ValidatorFunc = Callable[[str], bool | str]
+ValidatorFunc = Callable[[str], Union[bool, str]]
 FilterFunc = Callable[[str], Any]
 PromptValidator = Tuple[Optional[FilterFunc], ValidatorFunc]
 
@@ -105,3 +105,23 @@ def build_inputs(names: Sequence[str], messages: Sequence[str], validators: Opti
         return [build_input(names[i], messages[i], validators[i]) for i in range(len(names))]
     else:
         return [build_input(names[i], messages[i]) for i in range(len(names))]
+    
+def build_list(name: str, message: str, choices: Sequence[str]) -> Dict[str, Any]:
+    """
+    Builds a single list question dictionary compatible with the prompt system.
+
+    Args:
+        name (str): The identifier for the list.
+        message (str): The prompt message shown to the user.
+        choices (List[str]): The choices to display.
+    
+    Returns:
+        Dict[str, Any]: A dictionary representing a prompt list question with a filter to change the result to snake_case.
+    """
+    return {
+        "type": "list",
+        "name": name,
+        "message": message,
+        "choices": choices,
+        "filter": lambda val: spaced_to_snake(val)
+    }

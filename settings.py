@@ -41,3 +41,8 @@ class Settings:
             raise ValueError(f"Unknown input type: {input_type}")
         
         return input_class(tag_name, configured_tag)
+
+
+class SettingsWizard:
+    def __init__(self, main_menu):
+        self.main_menu = main_menu

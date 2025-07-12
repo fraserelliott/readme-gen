@@ -1,9 +1,8 @@
 import os
 import sys
 from readme_generator import ReadmeGenerator
-from settings_wizard import SettingsWizard
 from template_wizard import TemplateWizard
-from settings import Settings
+from settings import Settings, SettingsWizard
 from PyInquirer import prompt
 
 ROUTING_CHOICES = {

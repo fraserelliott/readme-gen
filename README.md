@@ -25,6 +25,8 @@ pip install -r requirements.txt
 ---
 ## Usage Instructions
 
+https://www.youtube.com/watch?v=gX5hRKzHbIg
+
 ```
 python main.py
 ```
